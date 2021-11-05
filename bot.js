@@ -98,7 +98,7 @@ const start = () => {
     const action = callbackQuery.data;
 
     if (action === "current_time") {
-      addStartTime();
+      console.log("Current", date);
     }
   });
 };
