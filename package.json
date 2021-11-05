@@ -17,5 +17,8 @@
     "moment": "^2.29.1",
     "node-telegram-bot-api": "^0.54.0",
     "nodemon": "^2.0.14"
+  },
+  "devDependencies": {
+    "prisma": "^3.4.1"
   }
 }
