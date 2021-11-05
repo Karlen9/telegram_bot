@@ -1,0 +1,21 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "nodemon bot.js",
+    "start": "node bot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "covid19-api": "^1.2.1",
+    "dotenv": "^10.0.0",
+    "moment": "^2.29.1",
+    "node-telegram-bot-api": "^0.54.0",
+    "nodemon": "^2.0.14"
+  }
+}
