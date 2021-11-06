@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import TelegramBot from "node-telegram-bot-api";
 import { Sequelize } from "sequelize";
 import pg from "pg";
+import DataTypes from "sequelize";
 
 pg.defaults.ssl = true;
 
@@ -18,6 +19,14 @@ const sequelize = new Sequelize(
   //   dialect: "postgres",
   // }
 );
+
+const UserModel = sequelize.define("user", {
+  id: { type: DataTypes.UUIDV4, primaryKey: true, unique: true },
+  chatId: { type: DataTypes.STRING, unique: true },
+  enterDate: { type: DataTypes.STRING },
+  exitDate: { type: DataTypes.STRING },
+});
+
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const date = moment().format("MMMM Do, h:mm");
 
@@ -77,6 +86,7 @@ const start = async () => {
 
     try {
       if (text === "/start") {
+        await UserModel.create({ chatId });
         //   await bot.sendSticker(
         //     chatId,
         //     "https://tlgrm.ru/_/stickers/972/d03/972d03b1-80b4-43ac-8063-80e62b150d91/4.webp"
@@ -84,11 +94,12 @@ const start = async () => {
 
         return bot.sendMessage(chatId, `Добро пожаловать!`);
       } else if (text === "/info") {
-        return bot.sendMessage(
+        const user = UserModel.findOne({ chatId });
+        await bot.sendMessage(
           chatId,
-          `Тебя зовут: ${msg.from.first_name ? msg.from.first_name : ""} ${
+          `Тебя зовут: ${user.first_name ? msg.from.first_name : ""} ${
             msg.from.last_name ? msg.from.last_name : ""
-          }, твой id: ${msg.from.id}`
+          }, твой id: ${msg.from.id}, `
         );
       } else if (text === "/date") {
         return await bot.sendMessage(chatId, `Сегодня: ${date} `);
