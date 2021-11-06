@@ -7,13 +7,6 @@ pg.defaults.ssl = true;
 
 dotenv.config();
 
-const UserModel = sequelize.define("user", {
-  id: { type: DataTypes.UUIDV4, primaryKey: true, unique: true },
-  chatId: { type: DataTypes.STRING, unique: true },
-  enterDate: { type: DataTypes.STRING },
-  exitDate: { type: DataTypes.STRING },
-});
-
 const bot = new TelegramBot(process.env.BOT_TOKEN, { polling: true });
 const date = moment().format("MMMM Do, h:mm");
 
