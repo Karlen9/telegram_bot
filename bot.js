@@ -1,6 +1,8 @@
 import moment from "moment";
 import dotenv from "dotenv";
 import TelegramBot from "node-telegram-bot-api";
+import sequelize from "./db";
+import UserModel from "./models";
 
 dotenv.config();
 
@@ -40,7 +42,13 @@ const addStartTime = () => {
   console.log(date);
 };
 
-const start = () => {
+const start = async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+  } catch (error) {
+    console.log("Ошибка при подключении к Базе Данных ", error);
+  }
   bot.on("message", async (msg) => {
     const chatId = msg.chat.id;
     const text = msg.text;
@@ -55,43 +63,47 @@ const start = () => {
       { command: "/date", description: "Дата сегодня" },
     ];
 
+    try {
+      if (text === "/start") {
+        //   await bot.sendSticker(
+        //     chatId,
+        //     "https://tlgrm.ru/_/stickers/972/d03/972d03b1-80b4-43ac-8063-80e62b150d91/4.webp"
+        //   );
+
+        return bot.sendMessage(chatId, `Добро пожаловать!`);
+      } else if (text === "/info") {
+        return bot.sendMessage(
+          chatId,
+          `Тебя зовут: ${msg.from.first_name ? msg.from.first_name : ""} ${
+            msg.from.last_name ? msg.from.last_name : ""
+          }, твой id: ${msg.from.id}`
+        );
+      } else if (text === "/date") {
+        return await bot.sendMessage(chatId, `Сегодня: ${date} `);
+      } else if (text === "/enter") {
+        bot.sendMessage(
+          chatId,
+          "Напишите время входа в офис: ",
+          currentTimeOption
+        );
+      } else if (text === "/exit") {
+        bot.sendMessage(
+          chatId,
+          "Напишите время выхода из офиса: ",
+          currentTimeOption
+        );
+      } else {
+        return bot.sendMessage(
+          chatId,
+          `Привет, ты написал мне: "${text}", напиши какую-нибудь команду...`
+        );
+      }
+    } catch (error) {
+      bot.sendMessage(chatId, "Произошла ошибка...");
+    }
+
     bot.setMyCommands(commands);
     console.log("Сообщение: ", text, ". От ", msg.from.first_name);
-
-    if (text === "/start") {
-      //   await bot.sendSticker(
-      //     chatId,
-      //     "https://tlgrm.ru/_/stickers/972/d03/972d03b1-80b4-43ac-8063-80e62b150d91/4.webp"
-      //   );
-
-      return bot.sendMessage(chatId, `Добро пожаловать!`);
-    } else if (text === "/info") {
-      return bot.sendMessage(
-        chatId,
-        `Тебя зовут: ${msg.from.first_name ? msg.from.first_name : ""} ${
-          msg.from.last_name ? msg.from.last_name : ""
-        }, твой id: ${msg.from.id}`
-      );
-    } else if (text === "/date") {
-      return await bot.sendMessage(chatId, `Сегодня: ${date} `);
-    } else if (text === "/enter") {
-      bot.sendMessage(
-        chatId,
-        "Напишите время входа в офис: ",
-        currentTimeOption
-      );
-    } else if (text === "/exit") {
-      bot.sendMessage(
-        chatId,
-        "Напишите время выхода из офиса: ",
-        currentTimeOption
-      );
-    } else {
-      return bot.sendMessage(
-        chatId,
-        `Привет, ты написал мне: "${text}", напиши какую-нибудь команду...`
-      );
-    }
   });
 
   bot.on("callback_query", (callbackQuery) => {
