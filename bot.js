@@ -1,8 +1,8 @@
 import moment from "moment";
 import dotenv from "dotenv";
 import TelegramBot from "node-telegram-bot-api";
-import sequelize from "./db";
-import UserModel from "./models";
+import sequelize from "./db.js";
+import UserModel from "./models.js";
 
 dotenv.config();
 
