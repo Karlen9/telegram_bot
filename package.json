@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "nodemon bot.js",
     "start": "node bot.js"
@@ -15,6 +14,7 @@
     "covid19-api": "^1.2.1",
     "dotenv": "^10.0.0",
     "moment": "^2.29.1",
+    "node": "^17.0.1",
     "node-telegram-bot-api": "^0.54.0",
     "nodejs": "0.0.0",
     "nodemon": "^2.0.14",
